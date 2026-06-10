@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JNEN – Scooter Rental Marrakech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Cairo:wght@400;600;700&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --terracotta: #C4622D;
+      --gold:       #D4A843;
+      --cream:      #FAF6EF;
+      --deep:       #1A1008;
+      --sand:       #E8D5B0;
+      --white:      #FFFFFF;
+      --wa:         #25D366;
+      --muted:      #7a6650;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', 'Tajawal', sans-serif;
+      background: var(--cream);
+      color: var(--deep);
+      overflow-x: hidden;
+    }
+
+    /* ── LANG SWITCHER ── */
+    .lang-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(26,16,8,.92);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 16px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,.25);
+      color: rgba(255,255,255,.65);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      padding: 5px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .lang-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .lang-btn.active { background: var(--gold); border-color: var(--gold); color: var(--deep); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+      background: var(--deep);
+      padding-top: 50px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('1000355951.webp');
+      background-size: cover;
+      background-position: center 30%;
+      opacity: .5;
+    }
+
+    .hero-arch {
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 160px;
+      background: var(--cream);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 24px 110px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--terracotta);
+      color: var(--white);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 40px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 9vw, 5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.08;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span { color: var(--gold); }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,.8);
+      margin-bottom: 36px;
+    }
+
+    .price-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      background: var(--gold);
+      color: var(--deep);
+      border-radius: 60px;
+      padding: 14px 36px;
+      font-weight: 900;
+      font-size: 1.5rem;
+      margin-bottom: 28px;
+    }
+    .price-pill small { font-size: .85rem; font-weight: 600; opacity: .75; }
+
+    /* ── WA BUTTON ── */
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--wa);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 15px 34px;
+      border-radius: 60px;
+      box-shadow: 0 8px 30px rgba(37,211,102,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .wa-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(37,211,102,.45); }
+    .wa-btn svg { flex-shrink: 0; }
+
+    /* ── FLOAT WA ── */
+    .wa-float {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--wa);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(37,211,102,.5);
+      z-index: 999;
+      transition: transform .2s;
+    }
+    .wa-float:hover { transform: scale(1.1); }
+
+    /* ── SECTIONS ── */
+    section { padding: 72px 24px; }
+
+    .section-label {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--deep);
+    }
+
+    /* ── GALLERY ── */
+    .gallery-section { background: var(--cream); text-align: center; }
+    .gallery-section .section-label { display: block; }
+    .gallery-desc { color: var(--muted); margin-bottom: 40px; font-size: 1rem; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .gallery-grid .g-main { grid-column: 1 / -1; }
+    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; display: block; }
+    .gallery-grid .g-main img { height: 320px; }
+    .gallery-grid .g-thumb img { height: 200px; }
+
+    /* ── FEATURES ── */
+    .features-section { background: var(--deep); color: var(--white); text-align: center; }
+    .features-section h2 { color: var(--white); margin-bottom: 8px; }
+    .features-section .section-label { color: var(--gold); }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+      max-width: 860px;
+      margin: 48px auto 0;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      padding: 32px 20px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
+    .feature-icon {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; color: var(--white); }
+    .feature-card p { font-size: .85rem; color: rgba(255,255,255,.55); line-height: 1.55; }
+
+    /* ── HOW ── */
+    .how-section { background: var(--sand); text-align: center; }
+    .steps { display: flex; flex-direction: column; max-width: 480px; margin: 48px auto 0; }
+
+    .step {
+      display: flex; align-items: flex-start; gap: 20px;
+      position: relative; padding-bottom: 36px;
+    }
+    .step:last-child { padding-bottom: 0; }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      color: var(--white);
+      font-weight: 900; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    .step-line {
+      position: absolute; top: 44px; width: 2px;
+      height: calc(100% - 44px);
+      background: var(--terracotta); opacity: .25;
+    }
+    .step:last-child .step-line { display: none; }
+    .step-body { text-align: start; }
+    .step-body h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+    .step-body p { font-size: .9rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: var(--terracotta); text-align: center; padding: 80px 24px;
+    }
+    .cta-section h2 { color: var(--white); margin-bottom: 10px; }
+    .cta-section p { color: rgba(255,255,255,.8); margin-bottom: 36px; font-size: 1.05rem; }
+    .cta-price { font-size: 3.5rem; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+    .cta-price span { font-size: 1.2rem; font-weight: 600; color: var(--white); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--deep); color: rgba(255,255,255,.45);
+      text-align: center; padding: 32px 24px; font-size: .85rem;
+    }
+    footer strong { color: var(--gold); }
+
+    /* ── RTL/LTR ── */
+    html[dir="rtl"] .step { flex-direction: row-reverse; }
+    html[dir="rtl"] .step-line { right: 21px; left: auto; }
+    html[dir="ltr"] .step { flex-direction: row; }
+    html[dir="ltr"] .step-line { left: 21px; right: auto; }
+    html[dir="ltr"] .wa-float { left: auto; right: 28px; }
+
+    /* arabic font override */
+    html[lang="ar"] body { font-family: 'Tajawal', sans-serif; }
+    html[lang="ar"] h1, html[lang="ar"] h2 { font-family: 'Cairo', sans-serif; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 520px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-grid .g-main { grid-column: 1; }
+      .gallery-grid .g-main img { height: 260px; }
+    }
+    @media (min-width: 640px) {
+      .gallery-grid .g-main img { height: 400px; }
+      .gallery-grid .g-thumb img { height: 250px; }
+    }
+
+    /* hide all lang content by default, show active */
+    [data-lang] { display: none; }
+    [data-lang].active { display: contents; }
+    .inline-lang { display: none; }
+    .inline-lang.active { display: inline; }
+    .block-lang { display: none; }
+    .block-lang.active { display: block; }
+    .flex-lang { display: none; }
+    .flex-lang.active { display: inline-flex; }
+  </style>
+</head>
+<body>
+
+<!-- LANG BAR -->
+<nav class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('fr')">FR</button>
+  <button class="lang-btn" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('ar')">عر</button>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-arch"></div>
+  <div class="hero-content">
+
+    <span class="badge">
+      <span class="inline-lang active" data-l="en">🛵 Marrakech · Daily Rental</span>
+      <span class="inline-lang" data-l="fr">🛵 Marrakech · Location Journalière</span>
+      <span class="inline-lang" data-l="es">🛵 Marrakech · Alquiler Diario</span>
+      <span class="inline-lang" data-l="ar">🛵 مراكش · الكراء اليومي</span>
+    </span>
+
+    <h1>
+      <span class="block-lang active" data-l="en">Explore Marrakech<br>freely with <span>JNEN</span></span>
+      <span class="block-lang" data-l="fr">Découvrez Marrakech<br>librement avec <span>JNEN</span></span>
+      <span class="block-lang" data-l="es">Descubre Marrakech<br>libremente con <span>JNEN</span></span>
+      <span class="block-lang" data-l="ar">اكتشف مراكش<br>بحرية مع <span>JNEN</span></span>
+    </h1>
+
+    <p class="hero-sub">
+      <span class="inline-lang active" data-l="en">Elegant electric scooters, ready to ride anytime</span>
+      <span class="inline-lang" data-l="fr">Scooters électriques élégants, prêts à partir à tout moment</span>
+      <span class="inline-lang" data-l="es">Scooters eléctricos elegantes, listos para salir en cualquier momento</span>
+      <span class="inline-lang" data-l="ar">دراجات كهربائية أنيقة، جاهزة للانطلاق في أي وقت</span>
+    </p>
+
+    <div class="price-pill">
+      200 MAD <small>
+        <span class="inline-lang active" data-l="en">/ day</span>
+        <span class="inline-lang" data-l="fr">/ jour</span>
+        <span class="inline-lang" data-l="es">/ día</span>
+        <span class="inline-lang" data-l="ar">/ اليوم</span>
+      </small>
+    </div>
+    <br>
+
+    <a class="wa-btn" id="hero-wa" href="#" target="_blank" rel="noopener">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span class="inline-lang active" data-l="en">Book via WhatsApp</span>
+      <span class="inline-lang" data-l="fr">Réserver via WhatsApp</span>
+      <span class="inline-lang" data-l="es">Reservar por WhatsApp</span>
+      <span class="inline-lang" data-l="ar">احجز عبر واتساب</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ══════════════ GALLERY ══════════════ -->
+<section class="gallery-section">
+  <span class="section-label">
+    <span class="inline-lang active" data-l="en">Gallery</span>
+    <span class="inline-lang" data-l="fr">Galerie</span>
+    <span class="inline-lang" data-l="es">Galería</span>
+    <span class="inline-lang" data-l="ar">معرض الصور</span>
+  </span>
+  <h2>
+    <span class="block-lang active" data-l="en">Choose your favourite colour</span>
+    <span class="block-lang" data-l="fr">Choisissez votre couleur préférée</span>
+    <span class="block-lang" data-l="es">Elige tu color favorito</span>
+    <span class="block-lang" data-l="ar">اختر لونك المفضل</span>
+  </h2>
+  <p class="gallery-desc">
+    <span class="inline-lang active" data-l="en">Available in multiple colours to match your style</span>
+    <span class="inline-lang" data-l="fr">Disponibles en plusieurs couleurs pour s'adapter à votre style</span>
+    <span class="inline-lang" data-l="es">Disponibles en varios colores para adaptarse a tu estilo</span>
+    <span class="inline-lang" data-l="ar">متوفرة بألوان متعددة لتناسب أسلوبك</span>
+  </p>
+
+  <div class="gallery-grid">
+    <div class="g-main"><img src="1000355952.webp" alt="JNEN scooters white and yellow" loading="lazy" /></div>
+    <div class="g-thumb"><img src="1000355948.webp" alt="JNEN grey scooter" loading="lazy" /></div>
+    <div class="g-thumb"><img src="1000355949.webp" alt="JNEN yellow scooter" loading="lazy" /></div>
+    <div class="g-thumb"><img src="1000355951.webp" alt="JNEN white scooter" loading="lazy" /></div>
+    <div class="g-thumb"><img src="1000355950.webp" alt="JNEN yellow scooter side" loading="lazy" /></div>
+  </div>
+</section>
+
+<!-- ══════════════ FEATURES ══════════════ -->
+<section class="features-section">
+  <span class="section-label">
+    <span class="inline-lang active" data-l="en">Why JNEN?</span>
+    <span class="inline-lang" data-l="fr">Pourquoi JNEN ?</span>
+    <span class="inline-lang" data-l="es">¿Por qué JNEN?</span>
+    <span class="inline-lang" data-l="ar">لماذا JNEN؟</span>
+  </span>
+  <h2>
+    <span class="block-lang active" data-l="en">Everything you need in one scooter</span>
+    <span class="block-lang" data-l="fr">Tout ce qu'il vous faut en un scooter</span>
+    <span class="block-lang" data-l="es">Todo lo que necesitas en un scooter</span>
+    <span class="block-lang" data-l="ar">كل ما تحتاجه في دراجة واحدة</span>
+  </h2>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>
+        <span class="inline-lang active" data-l="en">100% Electric</span>
+        <span class="inline-lang" data-l="fr">100% Électrique</span>
+        <span class="inline-lang" data-l="es">100% Eléctrico</span>
+        <span class="inline-lang" data-l="ar">كهربائية 100%</span>
+      </h3>
+      <p>
+        <span class="inline-lang active" data-l="en">Eco-friendly and silent through the medina's narrow alleys</span>
+        <span class="inline-lang" data-l="fr">Écologique et silencieux dans les ruelles de la médina</span>
+        <span class="inline-lang" data-l="es">Ecológico y silencioso por los callejones de la medina</span>
+        <span class="inline-lang" data-l="ar">صديقة للبيئة وبدون ضوضاء في أزقة المدينة العتيقة</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>
+        <span class="inline-lang active" data-l="en">Free Helmet</span>
+        <span class="inline-lang" data-l="fr">Casque Offert</span>
+        <span class="inline-lang" data-l="es">Casco Gratis</span>
+        <span class="inline-lang" data-l="ar">خوذة مجانية</span>
+      </h3>
+      <p>
+        <span class="inline-lang active" data-l="en">Included in the price to keep you safe on every ride</span>
+        <span class="inline-lang" data-l="fr">Inclus dans le prix pour votre sécurité à chaque trajet</span>
+        <span class="inline-lang" data-l="es">Incluido en el precio para tu seguridad en cada trayecto</span>
+        <span class="inline-lang" data-l="ar">مشمولة في السعر لضمان سلامتك في كل رحلة</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📦</div>
+      <h3>
+        <span class="inline-lang active" data-l="en">Rear Storage Box</span>
+        <span class="inline-lang" data-l="fr">Coffre Arrière</span>
+        <span class="inline-lang" data-l="es">Maletero Trasero</span>
+        <span class="inline-lang" data-l="ar">حقيبة خلفية</span>
+      </h3>
+      <p>
+        <span class="inline-lang active" data-l="en">Spacious storage for your souvenirs and daily essentials</span>
+        <span class="inline-lang" data-l="fr">Espace de rangement pour vos achats et vos essentiels</span>
+        <span class="inline-lang" data-l="es">Espacio amplio para tus compras y artículos esenciales</span>
+        <span class="inline-lang" data-l="ar">مساحة تخزين مريحة لحمل مشترياتك وأغراضك</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📍</div>
+      <h3>
+        <span class="inline-lang active" data-l="en">Marrakech Delivery</span>
+        <span class="inline-lang" data-l="fr">Livraison à Marrakech</span>
+        <span class="inline-lang" data-l="es">Entrega en Marrakech</span>
+        <span class="inline-lang" data-l="ar">تسليم بمراكش</span>
+      </h3>
+      <p>
+        <span class="inline-lang active" data-l="en">We come to you anywhere in Greater Marrakech</span>
+        <span class="inline-lang" data-l="fr">Nous venons à vous partout dans le Grand Marrakech</span>
+        <span class="inline-lang" data-l="es">Llegamos a ti en cualquier punto del Gran Marrakech</span>
+        <span class="inline-lang" data-l="ar">نصل إليك أينما كنت في مراكش الكبرى</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section class="how-section">
+  <span class="section-label">
+    <span class="inline-lang active" data-l="en">How it works</span>
+    <span class="inline-lang" data-l="fr">Comment ça marche</span>
+    <span class="inline-lang" data-l="es">Cómo funciona</span>
+    <span class="inline-lang" data-l="ar">كيف يعمل</span>
+  </span>
+  <h2>
+    <span class="block-lang active" data-l="en">Three simple steps</span>
+    <span class="block-lang" data-l="fr">Trois étapes simples</span>
+    <span class="block-lang" data-l="es">Tres pasos sencillos</span>
+    <span class="block-lang" data-l="ar">ثلاث خطوات فقط</span>
+  </h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1<div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>
+          <span class="inline-lang active" data-l="en">Contact us on WhatsApp</span>
+          <span class="inline-lang" data-l="fr">Contactez-nous sur WhatsApp</span>
+          <span class="inline-lang" data-l="es">Contáctanos por WhatsApp</span>
+          <span class="inline-lang" data-l="ar">تواصل معنا عبر واتساب</span>
+        </h3>
+        <p>
+          <span class="inline-lang active" data-l="en">Send us your rental date and preferred drop-off location</span>
+          <span class="inline-lang" data-l="fr">Envoyez-nous votre date de location et le lieu de livraison souhaité</span>
+          <span class="inline-lang" data-l="es">Envíanos tu fecha de alquiler y el lugar de entrega preferido</span>
+          <span class="inline-lang" data-l="ar">أرسل لنا رسالة بتاريخ الكراء والمكان المفضل للتسليم</span>
+        </p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2<div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>
+          <span class="inline-lang active" data-l="en">Pick your scooter</span>
+          <span class="inline-lang" data-l="fr">Choisissez votre scooter</span>
+          <span class="inline-lang" data-l="es">Elige tu scooter</span>
+          <span class="inline-lang" data-l="ar">اختر دراجتك</span>
+        </h3>
+        <p>
+          <span class="inline-lang active" data-l="en">Select the colour and model that suits you from our fleet</span>
+          <span class="inline-lang" data-l="fr">Sélectionnez la couleur et le modèle qui vous convient</span>
+          <span class="inline-lang" data-l="es">Selecciona el color y modelo que más te guste de nuestra flota</span>
+          <span class="inline-lang" data-l="ar">اختر اللون والموديل المناسب من مجموعتنا المتاحة</span>
+        </p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3<div class="step-line"></div></div>
+      <div class="step-body">
+        <h3>
+          <span class="inline-lang active" data-l="en">Ride & enjoy!</span>
+          <span class="inline-lang" data-l="fr">Roulez et profitez !</span>
+          <span class="inline-lang" data-l="es">¡Monta y disfruta!</span>
+          <span class="inline-lang" data-l="ar">انطلق واستمتع!</span>
+        </h3>
+        <p>
+          <span class="inline-lang active" data-l="en">We deliver the scooter with a helmet — you're ready to explore</span>
+          <span class="inline-lang" data-l="fr">Nous livrons le scooter avec le casque — vous êtes prêt à explorer</span>
+          <span class="inline-lang" data-l="es">Entregamos el scooter con el casco — listo para explorar</span>
+          <span class="inline-lang" data-l="ar">نسلم لك الدراجة مع الخوذة وأنت مستعد للاستكشاف</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CTA ══════════════ -->
+<section class="cta-section">
+  <h2>
+    <span class="block-lang active" data-l="en">Book your scooter today</span>
+    <span class="block-lang" data-l="fr">Réservez votre scooter aujourd'hui</span>
+    <span class="block-lang" data-l="es">Reserva tu scooter hoy</span>
+    <span class="block-lang" data-l="ar">احجز دراجتك اليوم</span>
+  </h2>
+  <div class="cta-price">200 MAD <span>
+    <span class="inline-lang active" data-l="en">/ day</span>
+    <span class="inline-lang" data-l="fr">/ jour</span>
+    <span class="inline-lang" data-l="es">/ día</span>
+    <span class="inline-lang" data-l="ar">/ اليوم</span>
+  </span></div>
+  <p>
+    <span class="inline-lang active" data-l="en">Available 7 days a week · Delivery across Marrakech</span>
+    <span class="inline-lang" data-l="fr">Disponible 7j/7 · Livraison partout à Marrakech</span>
+    <span class="inline-lang" data-l="es">Disponible 7 días a la semana · Entrega en todo Marrakech</span>
+    <span class="inline-lang" data-l="ar">متاح طوال أيام الأسبوع · التسليم في مراكش</span>
+  </p>
+  <a class="wa-btn" id="cta-wa" href="#" target="_blank" rel="noopener">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span class="inline-lang active" data-l="en">Contact us on WhatsApp</span>
+    <span class="inline-lang" data-l="fr">Contactez-nous sur WhatsApp</span>
+    <span class="inline-lang" data-l="es">Contáctanos por WhatsApp</span>
+    <span class="inline-lang" data-l="ar">تواصل الآن عبر واتساب</span>
+  </a>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <p>© 2025 <strong>JNEN</strong> ·
+    <span class="inline-lang active" data-l="en">Scooter Rental · Marrakech, Morocco</span>
+    <span class="inline-lang" data-l="fr">Location de Scooters · Marrakech, Maroc</span>
+    <span class="inline-lang" data-l="es">Alquiler de Scooters · Marrakech, Marruecos</span>
+    <span class="inline-lang" data-l="ar">كراء الدراجات · مراكش، المغرب</span>
+  </p>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a class="wa-float" id="float-wa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  const PHONE = '212658168090'; // ← ضع رقمك هنا
+
+  const waMessages = {
+    en: "Hello, I'd like to rent a JNEN scooter in Marrakech",
+    fr: "Bonjour, je souhaite louer un scooter JNEN à Marrakech",
+    es: "Hola, me gustaría alquilar un scooter JNEN en Marrakech",
+    ar: "السلام عليكم، أريد كراء دراجة JNEN بمراكش"
+  };
+
+  function waLink(lang) {
+    return `https://wa.me/${PHONE}?text=${encodeURIComponent(waMessages[lang])}`;
+  }
+
+  function setLang(lang) {
+    const html = document.documentElement;
+    const isRtl = lang === 'ar';
+
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+
+    // lang buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    const map = { en: 0, fr: 1, es: 2, ar: 3 };
+    document.querySelectorAll('.lang-btn')[map[lang]].classList.add('active');
+
+    // inline spans
+    document.querySelectorAll('.inline-lang').forEach(el => {
+      el.classList.toggle('active', el.dataset.l === lang);
+    });
+
+    // block spans
+    document.querySelectorAll('.block-lang').forEach(el => {
+      el.classList.toggle('active', el.dataset.l === lang);
+    });
+
+    // wa links
+    const link = waLink(lang);
+    document.getElementById('hero-wa').href = link;
+    document.getElementById('cta-wa').href = link;
+    document.getElementById('float-wa').href = link;
+
+    // float position (mirror for RTL)
+    const fl = document.querySelector('.wa-float');
+    if (isRtl) { fl.style.left = '28px'; fl.style.right = 'auto'; }
+    else        { fl.style.right = '28px'; fl.style.left = 'auto'; }
+
+    localStorage.setItem('jnen-lang', lang);
+  }
+
+  // init
+  const saved = localStorage.getItem('jnen-lang') || 'en';
+  setLang(saved);
+</script>
+</body>
+</html>
